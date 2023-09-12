@@ -1,0 +1,8 @@
+"./Driver/Src/SEGGER_RTT.o"
+"./Driver/Src/SEGGER_RTT_Syscalls_GCC.o"
+"./Driver/Src/SEGGER_RTT_printf.o"
+"./Driver/Src/stm32f103xx_gpio.o"
+"./Src/main.o"
+"./Src/syscalls.o"
+"./Src/sysmem.o"
+"./Startup/startup_stm32f103c8tx.o"
