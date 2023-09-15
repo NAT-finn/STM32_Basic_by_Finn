@@ -25,9 +25,9 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-void delay(void)
+void delay(uint32_t time)
 {
-	for(uint32_t i = 0; i < 200000; i++);
+	for(uint32_t i = 0; i < time*500; i++);
 }
 
 int main(void)
@@ -44,12 +44,50 @@ int main(void)
 	GPIO_PeriClockControl(GPIOC, ENABLE);
 	GPIO_Init(&GpioLed);
 
+
+	GPIO_Handle_t GpioBtn;
+
+	GpioBtn.pGPIOx = GPIOB;
+	GpioBtn.GPIO_PinConfig.GPIO_PinNumber = 10;
+	GpioBtn.GPIO_PinConfig.GPIO_PinMode = INPUT_MODE;
+	//GpioBtn.GPIO_PinConfig.GPIO_PinMode_CNF = FLOATING_INPUT_CNF; // chân input không pull up hoặc down, sử dụng pull up/down ngoài
+	GpioBtn.GPIO_PinConfig.GPIO_PinMode_CNF = INPUT_PULL_UP_DOWN_CNF;
+	GPIOB->ODR |= (1 << 10);
+	GPIO_PeriClockControl(GPIOB, ENABLE);
+	GPIO_Init(&GpioBtn);
+
 	SEGGER_RTT_printf(0, "Hello world \n");
     /* Loop forever */
 	for(;;)
 	{
-		GPIO_ToggleOutputPin(GPIOC, 13);
-		delay();
+		/*
+		 * Kiểm tra dữ liệu của đầu B10 rồi in lên Log RTT
+		*/
+		uint16_t x = GPIO_ReadFromInputPin(GPIOB, 10);
+		SEGGER_RTT_printf(0,"%X \n", x);
+		delay(50);
+		//----------------------------------------------------
+
+		/*
+		* Test Button cơ bản, delay khoảng 1s để đợi nút thả ra khi đã detech nhấn nút
+		*/
+//		if(GPIO_ReadFromInputPin(GPIOB, 10) == 0)
+//		{
+//			delay(1000);
+//			GPIO_ToggleOutputPin(GPIOC, 13);
+//		}
+		//-----------------------------------------------------
+
+
+		/*
+		* Test Button đúng hơn một tí =))
+		*/
+//		if(GPIO_ReadFromInputPin(GPIOB, 10) == 0)
+//		{
+//			delay(1000);
+//			GPIO_ToggleOutputPin(GPIOC, 13);
+//		}
+		//-----------------------------------------------------
 	}
 	return 0;
 }
