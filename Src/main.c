@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 #include <stm32f103xx_gpio.h>
-#include <SEGGER_RTT.h>
+#include <stdio.h>
 
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
@@ -32,46 +32,42 @@ void delay(uint32_t time)
 
 int main(void)
 {
-	SEGGER_RTT_ConfigUpBuffer(0, NULL, NULL, 0, SEGGER_RTT_MODE_NO_BLOCK_SKIP);
+
+	GPIO_PeriClockControl(GPIOB, ENABLE);
+	GPIO_PeriClockControl(GPIOC, ENABLE);
 
 	GPIO_Handle_t GpioLed;
-
 	GpioLed.pGPIOx = GPIOC;
 	GpioLed.GPIO_PinConfig.GPIO_PinNumber = 13;
 	GpioLed.GPIO_PinConfig.GPIO_PinMode = OUTPUT_MODE_10MHZ;
 	GpioLed.GPIO_PinConfig.GPIO_PinMode_CNF = OUTPUT_OPEN_DRAIN_CNF;
 
-	GPIO_PeriClockControl(GPIOC, ENABLE);
 	GPIO_Init(&GpioLed);
 
 
 	GPIO_Handle_t GpioBtn;
-
 	GpioBtn.pGPIOx = GPIOB;
 	GpioBtn.GPIO_PinConfig.GPIO_PinNumber = 10;
 	GpioBtn.GPIO_PinConfig.GPIO_PinMode = INPUT_MODE;
-	//GpioBtn.GPIO_PinConfig.GPIO_PinMode_CNF = FLOATING_INPUT_CNF; // chân input không pull up hoặc down, sử dụng pull up/down ngoài
-	GpioBtn.GPIO_PinConfig.GPIO_PinMode_CNF = INPUT_PULL_UP_DOWN_CNF;
-	GPIOB->ODR |= (1 << 10);
-	GPIO_PeriClockControl(GPIOB, ENABLE);
+	GpioBtn.GPIO_PinConfig.GPIO_PinMode_CNF = FLOATING_INPUT_CNF; // chân input không pull up hoặc down, sử dụng pull up/down ngoài
+	//GpioBtn.GPIO_PinConfig.GPIO_PinMode_CNF = INPUT_PULL_UP_DOWN_CNF;
+    //GPIOB->ODR |= (1 << 10); // Set input pull up
+
 	GPIO_Init(&GpioBtn);
 
-	SEGGER_RTT_printf(0, "Hello world \n");
+	uint8_t check = 0;
+
+	//GPIO_WriteToOutputPin(GPIOC, 13, 1);
     /* Loop forever */
 	for(;;)
 	{
-		/*
-		 * Kiểm tra dữ liệu của đầu B10 rồi in lên Log RTT
-		*/
-		uint16_t x = GPIO_ReadFromInputPin(GPIOB, 10);
-		SEGGER_RTT_printf(0,"%X \n", x);
-		delay(50);
-		//----------------------------------------------------
-
+		printf("Hello World\n");
+//		delay(1000);
+//		GPIO_ToggleOutputPin(GPIOC, 13);
 		/*
 		* Test Button cơ bản, delay khoảng 1s để đợi nút thả ra khi đã detech nhấn nút
 		*/
-//		if(GPIO_ReadFromInputPin(GPIOB, 10) == 0)
+//		if(GPIO_ReadFromInputPin(GPIOB, 1) == 0)
 //		{
 //			delay(1000);
 //			GPIO_ToggleOutputPin(GPIOC, 13);
@@ -82,11 +78,20 @@ int main(void)
 		/*
 		* Test Button đúng hơn một tí =))
 		*/
-//		if(GPIO_ReadFromInputPin(GPIOB, 10) == 0)
-//		{
-//			delay(1000);
-//			GPIO_ToggleOutputPin(GPIOC, 13);
-//		}
+		if(GPIO_ReadFromInputPin(GPIOB, 10) == 0)
+		{
+			delay(10);
+			while(GPIO_ReadFromInputPin(GPIOB, 10) == 0)
+			{
+				if(check == 0)
+				{
+					GPIO_WriteToOutputPin(GPIOC, 13, 0);
+				}
+				check = 1;
+			}
+		}
+		GPIO_WriteToOutputPin(GPIOC, 13, 1);
+		check = 0;
 		//-----------------------------------------------------
 	}
 	return 0;
