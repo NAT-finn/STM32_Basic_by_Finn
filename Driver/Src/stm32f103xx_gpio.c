@@ -8,20 +8,52 @@
 
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
-	uint32_t temp = 0;
-	uint8_t getmode = ( pGPIOHandle->GPIO_PinConfig.GPIO_PinMode_CNF << 2 ) + ( pGPIOHandle->GPIO_PinConfig.GPIO_PinMode );
-	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber < 8)
+	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode < 4)
 	{
-		temp = getmode << ( 4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber );
-		pGPIOHandle->pGPIOx->CRL &= ~( 0xF << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 4));
-		pGPIOHandle->pGPIOx->CRL |= temp;
-	}else
-	{
-		temp = getmode << ( 4 * (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber-8) );
-		pGPIOHandle->pGPIOx->CRH &= ~( 0xF << ((pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber-8) * 4));
-		pGPIOHandle->pGPIOx->CRH |= temp;
+		uint32_t temp = 0;
+		uint8_t getmode = ( pGPIOHandle->GPIO_PinConfig.GPIO_PinMode_CNF << 2 ) + ( pGPIOHandle->GPIO_PinConfig.GPIO_PinMode );
+		if(pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber < 8)
+		{
+			temp = getmode << ( 4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber );
+			pGPIOHandle->pGPIOx->CRL &= ~( 0xF << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 4));
+			pGPIOHandle->pGPIOx->CRL |= temp;
+		}else
+		{
+			temp = getmode << ( 4 * (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber-8) );
+			pGPIOHandle->pGPIOx->CRH &= ~( 0xF << ((pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber-8) * 4));
+			pGPIOHandle->pGPIOx->CRH |= temp;
+		}
+		temp = 0;
+	}else{
+		uint32_t temp = 0;
+		uint8_t getmode = ( pGPIOHandle->GPIO_PinConfig.GPIO_PinMode_CNF << 2 ) + ( INPUT_MODE );
+		if(pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber < 8)
+		{
+			temp = getmode << ( 4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber );
+			pGPIOHandle->pGPIOx->CRL &= ~( 0xF << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 4));
+			pGPIOHandle->pGPIOx->CRL |= temp;
+		}else
+		{
+			temp = getmode << ( 4 * (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber-8) );
+			pGPIOHandle->pGPIOx->CRH &= ~( 0xF << ((pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber-8) * 4));
+			pGPIOHandle->pGPIOx->CRH |= temp;
+		}
+		temp = 0;
+		if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode_CNF == GPIO_MODE_IT_FT)
+		{
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}else if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode_CNF == GPIO_MODE_IT_RT)
+		{
+			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}else if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode_CNF == GPIO_MODE_IT_RFT)
+		{
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
 	}
-	temp = 0;
+
 }
 
 void GPIO_DeInit(GPIO_Reg_t *pGPIOx)

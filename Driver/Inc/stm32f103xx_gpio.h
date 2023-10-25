@@ -34,6 +34,9 @@ typedef struct
 #define OUTPUT_MODE_10MHZ               1
 #define OUTPUT_MODE_2MHZ                2
 #define OUTPUT_MODE_50MHZ               3
+#define GPIO_MODE_IT_FT                 4
+#define GPIO_MODE_IT_RT                 5
+#define GPIO_MODE_IT_RFT                6
 
 #define ANALOG_MODE_CNF                 0
 #define FLOATING_INPUT_CNF              1

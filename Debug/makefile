@@ -34,40 +34,40 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := StartEmbedded
+BUILD_ARTIFACT_NAME := STM32_Basic_by_Finn
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-StartEmbedded.elf \
+STM32_Basic_by_Finn.elf \
 
 MAP_FILES += \
-StartEmbedded.map \
+STM32_Basic_by_Finn.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-StartEmbedded.list \
+STM32_Basic_by_Finn.list \
 
 OBJCOPY_HEX += \
-StartEmbedded.hex \
+STM32_Basic_by_Finn.hex \
 
 OBJCOPY_BIN += \
-StartEmbedded.bin \
+STM32_Basic_by_Finn.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: StartEmbedded.elf secondary-outputs
+main-build: STM32_Basic_by_Finn.elf secondary-outputs
 
 # Tool invocations
-StartEmbedded.elf StartEmbedded.map: $(OBJS) $(USER_OBJS) C:\Users\Administrator\STM32CubeIDE\STM32_Basic_by_Finn\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "StartEmbedded.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Administrator\STM32CubeIDE\STM32_Basic_by_Finn\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="StartEmbedded.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32_Basic_by_Finn.elf STM32_Basic_by_Finn.map: $(OBJS) $(USER_OBJS) C:\Users\Ancol\STM32CubeIDE\workspace_1.12.1\STM32_Basic_by_Finn\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32_Basic_by_Finn.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Ancol\STM32CubeIDE\workspace_1.12.1\STM32_Basic_by_Finn\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32_Basic_by_Finn.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -76,24 +76,24 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-StartEmbedded.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "StartEmbedded.list"
+STM32_Basic_by_Finn.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "STM32_Basic_by_Finn.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-StartEmbedded.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "StartEmbedded.hex"
+STM32_Basic_by_Finn.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "STM32_Basic_by_Finn.hex"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-StartEmbedded.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "StartEmbedded.bin"
+STM32_Basic_by_Finn.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "STM32_Basic_by_Finn.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) StartEmbedded.bin StartEmbedded.elf StartEmbedded.hex StartEmbedded.list StartEmbedded.map default.size.stdout
+	-$(RM) STM32_Basic_by_Finn.bin STM32_Basic_by_Finn.elf STM32_Basic_by_Finn.hex STM32_Basic_by_Finn.list STM32_Basic_by_Finn.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)

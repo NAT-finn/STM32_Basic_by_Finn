@@ -88,6 +88,16 @@ typedef struct
 
 typedef struct
 {
+	__vo uint32_t IMR;
+	__vo uint32_t EMR;
+	__vo uint32_t RTSR;
+	__vo uint32_t FTSR;
+	__vo uint32_t SWIER;
+	__vo uint32_t PR;
+}EXTI_Reg_t;
+
+typedef struct
+{
 	__vo uint32_t CR;
 	__vo uint32_t CFGR;
 	__vo uint32_t CIR;
@@ -111,8 +121,10 @@ typedef struct
 #define GPIOE                 ((GPIO_Reg_t*)GPIOE_BASEADDR)
 #define GPIOF                 ((GPIO_Reg_t*)GPIOF_BASEADDR)
 #define GPIOG                 ((GPIO_Reg_t*)GPIOG_BASEADDR)
+
 #define RCC                   ((RCC_Reg_t*)RCC_BASEADDR)
 
+#define EXTI                  ((EXTI_Reg_t*)EXTI_BASEADDR)
 
 /*
  * Clock Enable Marcos for GPIOx peripherals
@@ -124,6 +136,8 @@ typedef struct
 #define GPIOE_PERI_CLOCK_ENABLE()      (RCC->APB2ENR |= (1 << 6))
 #define GPIOF_PERI_CLOCK_ENABLE()      (RCC->APB2ENR |= (1 << 7))
 #define GPIOG_PERI_CLOCK_ENABLE()      (RCC->APB2ENR |= (1 << 8))
+
+#define AFIO_PERI_CLOCK_ENABLE()       (RCC->APB2ENR |= (1 << 1))
 
 /*
  * Clock Disable Marcos for GPIOx peripherals
