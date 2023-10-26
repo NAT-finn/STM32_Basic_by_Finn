@@ -44,7 +44,7 @@
 #define SPI1_BASEADDR           0x40013000U
 #define USART1_BASEADDR         0x40013800U
 #define EXTI_BASEADDR           0x40010400U
-
+#define AFIO_BASEADDR           0x40010000U
 
 /*
  * Định nghĩa các thanh ghi do APB1 quản lý
@@ -64,6 +64,10 @@
  */
 #define RCC_BASEADDR            0x40021000U
 
+
+
+
+#define NVIC_ISER0
 
 /*
  * Structuring peripheral register
@@ -110,6 +114,14 @@ typedef struct
 	__vo uint32_t CSR;
 }RCC_Reg_t;
 
+typedef struct
+{
+	__vo uint32_t EVCR;
+	__vo uint32_t MAPR;
+	__vo uint32_t EXTICR[4];
+	__vo uint32_t MAPR2;
+}AFIO_Reg_t;
+
 
 /*
  * Tạo các con trỏ kiểu GPIO_Reg_t trỏ đến các địa chỉ của thanh ghi GPIO Port
@@ -125,6 +137,8 @@ typedef struct
 #define RCC                   ((RCC_Reg_t*)RCC_BASEADDR)
 
 #define EXTI                  ((EXTI_Reg_t*)EXTI_BASEADDR)
+
+#define AFIO                  ((AFIO_Reg_t*)AFIO_BASEADDR)
 
 /*
  * Clock Enable Marcos for GPIOx peripherals
@@ -150,6 +164,8 @@ typedef struct
 #define GPIOF_PERI_CLOCK_DISABLE()      (RCC->APB2ENR &= ~(1 << 7))
 #define GPIOG_PERI_CLOCK_DISABLE()      (RCC->APB2ENR &= ~(1 << 8))
 
+#define AFIO_PERI_CLOCK_DISABLE()       (RCC->APB2ENR &= ~(1 << 1))
+
 /*
  * Marcos to reset GPIOx peripherals
  */
@@ -164,7 +180,22 @@ typedef struct
 /*
  * Some generic marcos
  */
-#define MY_CODE             0
+#define GPIO_BASEADDR_TO_CODE(x)        ( (x == GPIOA)?0:\
+		                                  (x == GPIOB)?1:\
+				                          (x == GPIOC)?2:\
+						                  (x == GPIOD)?3:\
+								          (x == GPIOE)?4:\
+										  (x == GPIOF)?5:\
+										  (x == GPIOG)?6:0 )
+
+#define IRQ_NO_EXTI0        6
+#define IRG_NO_EXTI1        7
+#define IRQ_NO_EXTI2        8
+#define IRG_NO_EXTI3        9
+#define IRQ_NO_EXTI4        10
+#define IRG_NO_EXTI9_5      23
+#define IRG_NO_EXTI15_10    40
+
 #define ENABLE              1
 #define DISABLE             0
 #define SET                 ENABLE

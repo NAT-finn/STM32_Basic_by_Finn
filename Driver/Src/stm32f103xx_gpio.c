@@ -52,6 +52,14 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 		}
+
+		uint8_t temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4;
+		uint8_t temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
+		uint8_t port = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
+		AFIO_PERI_CLOCK_ENABLE();
+		AFIO->EXTICR[temp1] = port << ( temp2 * 4 );
+
+		EXTI->IMR |= 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber;
 	}
 
 }
@@ -126,7 +134,6 @@ uint16_t GPIO_ReadFromInputPort(GPIO_Reg_t *pGPIOx)
 	return value;
 }
 
-#if MY_CODE != 1            /* Dùng hàm GPIO_PeriClockControl theo hướng dẫn */
 void GPIO_PeriClockControl(GPIO_Reg_t *pGPIOx, uint8_t EnorDi)
 {
 	if(EnorDi != DISABLE)
@@ -191,7 +198,35 @@ void GPIO_PeriClockControl(GPIO_Reg_t *pGPIOx, uint8_t EnorDi)
 		}
 	}
 }
-#endif
+
+void GPIO_IRQCOnfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
+{
+	if(EnorDi != DISABLE)
+	{
+		if(IRQNumber < 32)
+		{
+
+		}else if(IRQNumber >= 32 && IRQNumber < 64)
+		{
+
+		}else if(IRQNumber >= 64)
+		{
+
+		}
+	}else
+	{
+		if(IRQNumber < 32)
+		{
+
+		}else if(IRQNumber >= 32 && IRQNumber < 64)
+		{
+
+		}else if(IRQNumber >= 64)
+		{
+
+		}
+	}
+}
 
 
 

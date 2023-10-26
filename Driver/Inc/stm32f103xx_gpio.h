@@ -61,12 +61,9 @@ typedef struct
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
 void GPIO_DeInit(GPIO_Reg_t *pGPIOx);
 // Clock setup
-#if MY_CODE
-// Hàm tự chế, chắc là đúng =))
-#define GPIO_PeriClockControl(X, Y)           GPIO##X##_PERI_CLOCK_##Y##ABLE()
-#else
+
 void GPIO_PeriClockControl(GPIO_Reg_t *pGPIOx, uint8_t EnorDi);  /* EnorDi: Enable or Disable */
-#endif
+
 // Read and Write
 uint16_t GPIO_ReadFromInputPin(GPIO_Reg_t *pGPIOx, uint8_t PinNumber);
 uint16_t GPIO_ReadFromInputPort(GPIO_Reg_t *pGPIOx);
@@ -75,7 +72,7 @@ void GPIO_WriteToOutputPort(GPIO_Reg_t *pGPIOx, uint16_t value);
 void GPIO_ToggleOutputPin(GPIO_Reg_t *pGPIOx, uint8_t PinNumber);
 // IRQ Configuration and ISR handling
 void GPIO_IRQHandling(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi);
-void GPIO_IRQCOnfig(uint8_t PinNumber);
+void GPIO_IRQCOnfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi);
 
 
 #endif /* SRC_STM32F103XX_GPIO_H_ */
